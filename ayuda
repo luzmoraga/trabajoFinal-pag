@@ -1,0 +1,46 @@
+install.packages("rvest")
+library(rvest)
+
+
+install.packages("rvest")
+library(rvest)
+
+
+pagcine <- "https://peliculaonlinehd.com/genero/estrenos/"
+
+#leer pag de peliculas 
+readpagcine<- read_html(pagcine)
+#extaer nombres de las peliculas 
+nodesname<- html_nodes(readpagcine,".data")
+#extraer datos de pelicula 
+nodesdatos<- html_nodes(readpagcine,".poster")
+#limpiar texto 
+nombrePeli<- html_text(nodesname)
+datosVotos<- html_text(nodesdatos)
+
+datosVotos<-gsub("Full HD","",datosVotos)
+datosVotos<- as.numeric(datosVotos)
+
+tabla1<- table(nombrePeli)
+tabla2<- table(datosVotos)
+
+tabla<-as.data.frame(tabla1)
+write.csv(tabla, file="TABLApag1.csv")
+tabla<-as.data.frame(tabla2)
+write.csv(tabla, file="TABLApag2.csv")
+
+
+pag2<-"https://peliculaonlinehd.com/genero/estrenos/page/2/"
+
+readpag2<- read_html(pag2)
+nodesname2<- html_nodes(readpag2,".data")
+nodesdatos2<- html_nodes(readpag2,".poster")
+
+nombre2<- html_text(nodesname2)
+datos2<- html_text(nodesdatos2)
+datos2<-gsub("Full HD","",datos2)
+datos2<- as.numeric(datos2)
+
+
+tabla3<- table(nombre2)
+tabla4<- table(datos2)
