@@ -2,6 +2,7 @@ install.packages("rvest")
 library(rvest)
 
 
+#pagina a investigar 
 
 pagcine <- "https://peliculaonlinehd.com/genero/estrenos/"
 
@@ -15,25 +16,21 @@ nodesdatos<- html_nodes(readpagcine,".poster")
 nombrePeli<- html_text(nodesname)
 datosVotos<- html_text(nodesdatos)
 
-contenidoLink<- html_attr(nodesdatos,"href")
-
-for(link in contenidoLink){
-  print(link)
-  # aca debe ir la extraccion de la informacion de cada pelicula
-  # ud no necesita paste en este punto ya que los link vienen completos
-}
-
+#extraer datos de votos
 datosVotos<-gsub("Full HD","",datosVotos)
 datosVotos<- as.numeric(datosVotos)
-
+# generar tabla con nombres y votos 
 tabla1<- table(nombrePeli)
 tabla2<- table(datosVotos)
 
+#guardar tabla
 tabla<-as.data.frame(tabla1)
 write.csv(tabla, file="TABLApag1.csv")
 tabla<-as.data.frame(tabla2)
 write.csv(tabla, file="TABLApag2.csv")
 
+#puesto que no pude generar el for, se extrajo la información de las
+#10 primeras pag de la categoria de generos estrenos.
 
 pag2<-"https://peliculaonlinehd.com/genero/estrenos/page/2/"
 
@@ -104,6 +101,7 @@ write.csv(tabla, file="TABLApag7.csv")
 tabla<-as.data.frame(tabla8)
 
 write.csv(tabla, file="TABLApag8.csv")
+
 pag5<-"https://peliculaonlinehd.com/genero/estrenos/page/5/"
 
 readpag5<- read_html(pag5)
@@ -242,6 +240,7 @@ tabla<-as.data.frame(tabla20)
 
 write.csv(tabla, file="TABLApag20.csv")
 
+#crear variables temporales de cada pag para comprar el nombre de la pelicula y la votacion 
 Temporal <- data.frame(Peliculas=nombrePeli, Votos = datosVotos)
 Temporal1 <- data.frame(Peliculas=nombre2, Votos= datos2)
 Temporal2 <- data.frame(Peliculas=nombre3, Votos= datos3)
@@ -253,10 +252,14 @@ Temporal7 <- data.frame(Peliculas=nombre8, Votos= datos8)
 Temporal8 <- data.frame(Peliculas=nombre9, Votos= datos9)
 Temporal9 <- data.frame(Peliculas=nombre10, Votos= datos10)
 
+#genero tabla completa que contenga el nombre y el promedio de votos (1 a 10) 
+
 tablamerge <- rbind(Temporal,Temporal1,Temporal2,Temporal3,Temporal4,Temporal5,Temporal6,Temporal7,Temporal8,Temporal9)
 
+#generar grafico que entrega la informacion completa de la cantidad de peliculas que se asocian en la puntuacion de votos entre (1a10) 
 GraficoVotos <- hist(tablamerge$Votos, main = "Ranking Votacion Peliculas", xlab = "Votos", ylab = "Frecuencia", col=rainbow(3))
 
+#guardar tabla en csv
 write.csv(tablamerge, file = "Ranking.csv")
 
 
